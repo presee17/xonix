@@ -2,26 +2,26 @@
 #include <time.h>
 
 #include "InputHandler.h"
+#include "ship.h"
 using namespace sf;
 
-class object;
 
-void UpCommand::execute(object* obj) { obj->up(); }
-void DownCommand::execute(object* obj) { obj->down(); }
-void LeftCommand::execute(object* obj) { obj->left(); }
-void RightCommand::execute(object* obj) { obj->right(); }
+void UpCommand::execute(Ship* ship) { ship->up(); }
+void DownCommand::execute(Ship* ship) { ship->down(); }
+void LeftCommand::execute(Ship* ship) { ship->left(); }
+void RightCommand::execute(Ship* ship) { ship->right(); }
 
-void InputHandler::handleInput(object* obj) {
+void InputHandler::handleInput(Ship* ship) {
     if (Keyboard::isKeyPressed(Keyboard::Up)) {
-        button_up_->execute(obj);
+        button_up_->execute(ship);
     }
     if (Keyboard::isKeyPressed(Keyboard::Down)) {
-        button_down_->execute(obj);
+        button_down_->execute(ship);
     }
     if (Keyboard::isKeyPressed(Keyboard::Left)) {
-        button_left_->execute(obj);
+        button_left_->execute(ship);
     }
     if (Keyboard::isKeyPressed(Keyboard::Right)) {
-        button_right_->execute(obj);
+        button_right_->execute(ship);
     }
 };

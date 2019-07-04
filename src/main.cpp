@@ -3,6 +3,9 @@
 
 #include "config.h"
 #include "InputHandler.h"
+#include "Map.h"
+#include "Enemy.h"
+#include "Ship.h"
 
 using namespace sf;
 
@@ -12,22 +15,6 @@ const int N = 160;
 int grid[M][N] = {0};
 int ts = 5; //tile size
 
-struct Enemy
-{int x,y,dx,dy;
-
-  Enemy()
-   {
-	x=y=300;
-    dx=4-rand()%8;
-    dy=4-rand()%8;
-   }
-
-  void move()
-   { 
-    x+=dx; if (grid[y/ts][x/ts]==1) {dx=-dx; x+=dx;}
-    y+=dy; if (grid[y/ts][x/ts]==1) {dy=-dy; y+=dy;}
-   }
-};
 
 void drop(int y,int x)
 {
@@ -40,10 +27,20 @@ void drop(int y,int x)
 
 int main()
 {
+    Map map(N,M);
     InputHandler handler;
-    Ship2* ship = new Ship2();
-    srand(time(0));
+    Enemy* enemy1 = new Enemy(N,M);
+    Enemy* enemy2 = new Enemy(N, M);
+    Enemy* enemy3 = new Enemy(N, M);
+    Enemy* enemy4 = new Enemy(N, M);
+    ZetShip* ship = new ZetShip();
+    map.enemy.push_back(enemy1);
+    map.enemy.push_back(enemy2);
+    map.enemy.push_back(enemy3);
+    map.enemy.push_back(enemy4);
+    map.ship.push_back(ship);
 
+    srand(time(0));
 	RenderWindow window(VideoMode(N*ts, M*ts), "Xonix Game!");
 	window.setFramerateLimit(60);
 
@@ -57,7 +54,6 @@ int main()
 	sEnemy.setOrigin(20,20);
 
 	int enemyCount = 4;
-    Enemy a[10];
 
 	bool Game=true;
 	int x=0, y=0, dx=0, dy=0;
@@ -92,53 +88,55 @@ int main()
                 Game=true;
                }
 		}
-        handler.handleInput(ship);
-        dx = ship->getx();
-        dy = ship->gety();
-        ship->refresh();
+        //handler.handleInput(ship);
+        //dx = ship->getx();
+        //dy = ship->gety();
 		if (!Game) continue;
+        
+        if (timer > delay)
+        {
+        Game = map.updateMap();
+        timer = 0;
 
-		if (timer>delay)
-		{
-            int x_flag = 1;
-            if (dx < 0) x_flag = -1;
-            for (; dx != 0; x += x_flag, dx -= x_flag) {
-                if (x < 0) {
-                    x = 0;
-                    dx += x_flag;
-                    break;
-                }
-                if (x > N - 1) {
-                    x = N - 1;
-                    dx += x_flag;
-                    break;
-                }
-                if (grid[y][x] == 2) Game = false;
-                if (grid[y][x] == 0) grid[y][x] = 2;
-                timer = 0;
-            }
+  //          int x_flag = 1;
+  //          if (dx < 0) x_flag = -1;
+  //          for (; dx != 0; x += x_flag, dx -= x_flag) {
+  //              if (x < 0) {
+  //                  x = 0;
+  //                  dx += x_flag;
+  //                  break;
+  //              }
+  //              if (x > N - 1) {
+  //                  x = N - 1;
+  //                  dx += x_flag;
+  //                  break;
+  //              }
+  //              if (grid[y][x] == 2) Game = false;
+  //              if (grid[y][x] == 0) grid[y][x] = 2;
+  //              timer = 0;
+  //          }
 
-            int y_flag = 1;
-            if (dy < 0) y_flag = -1;
-            for (; dy != 0; y += y_flag, dy -= y_flag) {
-                if (y < 0) {
-                    y = 0;
-                    dy += y_flag;
-                    break;
-                }
-                if (y > M - 1) {
-                    y = M - 1;
-                    dy += y_flag;
-                    break;
-                }
-                if (grid[y][x] == 2) Game = false;
-                if (grid[y][x] == 0) grid[y][x] = 2;
-                timer = 0;
-            }
+  //          int y_flag = 1;
+  //          if (dy < 0) y_flag = -1;
+  //          for (; dy != 0; y += y_flag, dy -= y_flag) {
+  //              if (y < 0) {
+  //                  y = 0;
+  //                  dy += y_flag;
+  //                  break;
+  //              }
+  //              if (y > M - 1) {
+  //                  y = M - 1;
+  //                  dy += y_flag;
+  //                  break;
+  //              }
+  //              if (grid[y][x] == 2) Game = false;
+  //              if (grid[y][x] == 0) grid[y][x] = 2;
+  //              timer = 0;
+  //          }
 
-		}
+		//}
 
-		for (int i=0;i<enemyCount;i++) a[i].move();
+		//for (int i=0;i<enemyCount;i++) a[i].move();
 
 		if (grid[y][x]==1)
           {

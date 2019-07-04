@@ -17,5 +17,5 @@ include_directories("include")
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-add_executable(${PROJECT_NAME} src/main.cpp src/inputHandler.cpp src/object.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/inputHandler.cpp src/ship.cpp src/enemy.cpp src/map.cpp)
 target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
