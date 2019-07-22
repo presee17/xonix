@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <time.h>
 
-#include "config.h"
+//#include "config.h"
 #include "InputHandler.h"
 #include "Map.h"
 #include "Enemy.h"
@@ -12,18 +12,16 @@ using namespace sf;
 const int M = 80;
 const int N = 160;
 
-int grid[M][N] = {0};
-int ts = 5; //tile size
-
-
-void drop(int y,int x)
-{
-  if (grid[y][x]==0) grid[y][x]=-1;
-  if (grid[y-1][x]==0) drop(y-1,x);
-  if (grid[y+1][x]==0) drop(y+1,x);
-  if (grid[y][x-1]==0) drop(y,x-1);
-  if (grid[y][x+1]==0) drop(y,x+1);
-}
+//int grid[M][N] = {0};
+//
+//void drop(int y,int x)
+//{
+//  if (grid[y][x]==0) grid[y][x]=-1;
+//  if (grid[y-1][x]==0) drop(y-1,x);
+//  if (grid[y+1][x]==0) drop(y+1,x);
+//  if (grid[y][x-1]==0) drop(y,x-1);
+//  if (grid[y][x+1]==0) drop(y,x+1);
+//}
 
 int main()
 {
@@ -33,37 +31,32 @@ int main()
     Enemy* enemy2 = new Enemy(N, M);
     Enemy* enemy3 = new Enemy(N, M);
     Enemy* enemy4 = new Enemy(N, M);
-    ZetShip* ship = new ZetShip();
+    ZetShip* zet_ship = new ZetShip();
     map.enemy.push_back(enemy1);
     map.enemy.push_back(enemy2);
     map.enemy.push_back(enemy3);
     map.enemy.push_back(enemy4);
-    map.ship.push_back(ship);
+    map.ship.push_back(zet_ship);
 
     srand(time(0));
-	RenderWindow window(VideoMode(N*ts, M*ts), "Xonix Game!");
+	RenderWindow window(VideoMode(map.getMapHorizontalSize(), map.getMapverticalSize()), "");
 	window.setFramerateLimit(60);
 
-	Texture t1,t2,t3;
-	t1.loadFromFile(RESOURCE_PATH + "images/tiles.png");
-    t2.loadFromFile(RESOURCE_PATH + "images/gameover.png");
-    t3.loadFromFile(RESOURCE_PATH + "images/enemy.png");
+	//Texture t1,t2,t3;
+	//t1.loadFromFile(RESOURCE_PATH + "images/tiles.png");
+ //   t2.loadFromFile(RESOURCE_PATH + "images/gameover.png");
+ //   t3.loadFromFile(RESOURCE_PATH + "images/enemy.png");
 
-	Sprite sTile(t1), sGameover(t2), sEnemy(t3);
-	sGameover.setPosition(100,100);
-	sEnemy.setOrigin(20,20);
+	//Sprite sTile(t1), sGameover(t2), sEnemy(t3);
+	//sGameover.setPosition(100,100);
+	//sEnemy.setOrigin(20,20);
 
-	int enemyCount = 4;
+	//int enemyCount = 4;
 
 	bool Game=true;
-	int x=0, y=0, dx=0, dy=0;
+	//int x=0, y=0, dx=0, dy=0;
     float timer=0, delay=0.07; 
     Clock clock;
-
-	for (int i=0;i<M;i++)
-	 for (int j=0;j<N;j++)
-      if (i==0 || j==0 || i==M-1 || j==N-1)  grid[i][j]=1;
-
 
     while (window.isOpen())
     {
@@ -82,20 +75,20 @@ int main()
                {
                 for (int i=1;i<M-1;i++)
 	             for (int j=1;j<N-1;j++)
-                   grid[i][j]=0;
+                   //grid[i][j]=0;
 
-                x=10;y=0;
+                //x=10;y=0;
                 Game=true;
                }
 		}
-        //handler.handleInput(ship);
+        handler.handleInput(zet_ship);
         //dx = ship->getx();
         //dy = ship->gety();
 		if (!Game) continue;
         
         if (timer > delay)
         {
-        Game = map.updateMap();
+        //Game = map.updateMap();
         timer = 0;
 
   //          int x_flag = 1;
@@ -138,47 +131,48 @@ int main()
 
 		//for (int i=0;i<enemyCount;i++) a[i].move();
 
-		if (grid[y][x]==1)
-          {
-           dx=dy=0;
+		//if (grid[y][x]==1)
+  //        {
+  //         dx=dy=0;
 
-           for (int i=0;i<enemyCount;i++)
-                drop(a[i].y/ts, a[i].x/ts);
+  //         for (int i=0;i<enemyCount;i++)
+  //              drop(a[i].y/ts, a[i].x/ts);
 
-           for (int i=0;i<M;i++)
-	 	    for (int j=0;j<N;j++)
-              if (grid[i][j]==-1) grid[i][j]=0;
-              else grid[i][j]=1;
-          }
+  //         for (int i=0;i<M;i++)
+	 //	    for (int j=0;j<N;j++)
+  //            if (grid[i][j]==-1) grid[i][j]=0;
+  //            else grid[i][j]=1;
+  //        }
 
-        for (int i=0;i<enemyCount;i++)
-           if  (grid[a[i].y/ts][a[i].x/ts]==2) Game=false;
+  //      for (int i=0;i<enemyCount;i++)
+  //         if  (grid[a[i].y/ts][a[i].x/ts]==2) Game=false;
 
-      /////////draw//////////
-      window.clear();
+  //    /////////draw//////////
+  //    window.clear();
 
-	  for (int i=0;i<M;i++)
-		for (int j=0;j<N;j++)
-		 {
-            if (grid[i][j]==0) continue;
-            if (grid[i][j]==1) sTile.setTextureRect(IntRect( 0,0,ts,ts));
-            if (grid[i][j]==2) sTile.setTextureRect(IntRect(54,0,ts,ts));
-			sTile.setPosition(j*ts,i*ts);
-			window.draw(sTile);
-		 }
+	 // for (int i=0;i<M;i++)
+		//for (int j=0;j<N;j++)
+		// {
+  //          if (grid[i][j]==0) continue;
+  //          if (grid[i][j]==1) sTile.setTextureRect(IntRect( 0,0,ts,ts));
+  //          if (grid[i][j]==2) sTile.setTextureRect(IntRect(54,0,ts,ts));
+		//	sTile.setPosition(j*ts,i*ts);
+		//	window.draw(sTile);
+		// }
+        window.clear();
+        map.drawMap(&window);
+  //    sTile.setTextureRect(IntRect(36,0,ts,ts));
+	 // sTile.setPosition(x*ts,y*ts);
+	 // window.draw(sTile);
 
-      sTile.setTextureRect(IntRect(36,0,ts,ts));
-	  sTile.setPosition(x*ts,y*ts);
-	  window.draw(sTile);
+	  //sEnemy.rotate(10);
+   //   for (int i=0;i<enemyCount;i++)
+   //    {
+	  //  sEnemy.setPosition(a[i].x,a[i].y);
+	  //  window.draw(sEnemy);
+        }
 
-	  sEnemy.rotate(10);
-      for (int i=0;i<enemyCount;i++)
-       {
-	    sEnemy.setPosition(a[i].x,a[i].y);
-	    window.draw(sEnemy);
-       }
-
-      if (!Game) window.draw(sGameover);
+      //if (!Game) window.draw(sGameover);
 
  	  window.display();
 	}

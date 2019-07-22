@@ -2,10 +2,14 @@
 #define _Map_
 
 #include <vector>
-#include "Tile.h"
 
 class Ship;
 class Enemy;
+class Tile;
+
+namespace sf{
+class RenderWindow;
+}
 
 class Map {
 public:
@@ -17,25 +21,24 @@ public:
     int getMax_y() {
         return max_y;
     }
-    Tile** getCoordinate() {
+    std::vector<Tile*> getCoordinate() {
         return coordinate;
     }
     bool updateMap();
 
-    Tile& getTile(int x, int y) {
-        return coordinate[x][y];
-    }
-    STATE getState(int x, int y) {
-        return coordinate[x][y].getState();
-    }
-    void setState(int x, int y, STATE state) {
-        coordinate[x][y].setState(state);
-    }
+    Tile* getTile(int x, int y);
+
+    int getMapHorizontalSize();
+
+    int getMapverticalSize();
+
+    void drawMap(sf::RenderWindow* window);
+
     std::vector<Ship*> ship;
     std::vector<Enemy*> enemy;
 private:
     int max_x;
     int max_y;
-    Tile** coordinate;
+    std::vector<Tile*> coordinate;
 };
 #endif
