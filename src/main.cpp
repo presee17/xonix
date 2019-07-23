@@ -9,8 +9,8 @@
 
 using namespace sf;
 
-const int M = 80;
-const int N = 160;
+const int M = 40;
+const int N = 80;
 
 //int grid[M][N] = {0};
 //

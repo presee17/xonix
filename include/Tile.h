@@ -50,6 +50,23 @@ public:
 
     void setState(STATE state) {
         this->state = state;
+        if (state == BLACK_STATE) {
+            sTile = nullptr;
+        } else if (state == BLUE_STATE) {
+            sTile = blue_tile;
+        } else if (state == PURPLE_STATE) {
+            sTile = purple_tile;
+        } else if (state == RED_STATE) {
+            sTile = red_tile;
+        } else if (state == GREEN_STATE) {
+            sTile = green_tile;
+        } else if (state == YELLOW_STATE) {
+            sTile = yellow_tile;
+        } else if (state == SKYBLUE_STATE) {
+            sTile = skyblue_tile;
+        } else if (state == ORANGE_STATE) {
+            sTile = orange_tile;
+        }
     }
 };
 #endif

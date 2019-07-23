@@ -5,30 +5,38 @@
 #include <SFML/Graphics.hpp>
 
 Map::Map(int max_x, int max_y) {
-    sf::Texture tile;
-    tile.loadFromFile("E:/study/1/xonix/images/tiles.png");
-    Tile::blue_tile = new sf::Sprite(tile);
-    Tile::purple_tile = new sf::Sprite(tile);
-    Tile::red_tile = new sf::Sprite(tile);
-    Tile::green_tile = new sf::Sprite(tile);
-    Tile::yellow_tile = new sf::Sprite(tile);
-    Tile::skyblue_tile = new sf::Sprite(tile);
-    Tile::orange_tile = new sf::Sprite(tile);
-    Tile::tile_size = 5;
+    sf::Texture* tile = new sf::Texture();
+    tile->loadFromFile("E:/study/1/xonix/images/tiles.png");
+    Tile::tile_size = 18;
+
+    Tile::blue_tile->setTexture(*tile);
     Tile::blue_tile->setTextureRect(sf::IntRect(0, 0, Tile::tile_size, Tile::tile_size));
+
+    Tile::purple_tile->setTexture(*tile);
     Tile::purple_tile->setTextureRect(sf::IntRect(18, 0, Tile::tile_size, Tile::tile_size));
+    
+    Tile::red_tile->setTexture(*tile);
     Tile::red_tile->setTextureRect(sf::IntRect(36, 0, Tile::tile_size, Tile::tile_size));
+
+    Tile::green_tile->setTexture(*tile);
     Tile::green_tile->setTextureRect(sf::IntRect(54, 0, Tile::tile_size, Tile::tile_size));
+
+    Tile::yellow_tile->setTexture(*tile);
     Tile::yellow_tile->setTextureRect(sf::IntRect(72, 0, Tile::tile_size, Tile::tile_size));
+
+    Tile::skyblue_tile->setTexture(*tile);
     Tile::skyblue_tile->setTextureRect(sf::IntRect(90, 0, Tile::tile_size, Tile::tile_size));
-    Tile::orange_tile->setTextureRect(sf::IntRect(90, 0, Tile::tile_size, Tile::tile_size));
+
+    Tile::orange_tile->setTexture(*tile);
+    Tile::orange_tile->setTextureRect(sf::IntRect(108, 0, Tile::tile_size, Tile::tile_size));
+
     this->max_x = max_x;
     this->max_y = max_y;
 
     for (int i = 0; i < max_x; ++i) {
         for (int j = 0; j < max_y; ++j) {
             Tile* t = new Tile(i, j);
-            if (i == 0 || j == 0) {
+            if (i == 0 || j == 0 || i == max_x-1 || j == max_y - 1) {
                 t->setState(BLUE_STATE);
             }
             coordinate.push_back(t);
@@ -100,6 +108,8 @@ bool Map::updateMap() {
 
 void Map::drawMap(sf::RenderWindow* window) {
     for (Tile* t : coordinate) {
-        t->drawTile(window);
+        if (t->sTile != NULL) {
+            t->drawTile(window);
+        }
     }
 }
