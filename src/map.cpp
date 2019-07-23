@@ -33,10 +33,10 @@ Map::Map(int max_x, int max_y) {
     this->max_x = max_x;
     this->max_y = max_y;
 
-    for (int i = 0; i < max_x; ++i) {
-        for (int j = 0; j < max_y; ++j) {
-            Tile* t = new Tile(i, j);
-            if (i == 0 || j == 0 || i == max_x-1 || j == max_y - 1) {
+    for (int i = 0; i < max_y; ++i) {
+        for (int j = 0; j < max_x; ++j) {
+            Tile* t = new Tile(j, i);
+            if (i == 0 || j == 0 || j == max_x - 1 || i == max_y - 1) {
                 t->setState(BLUE_STATE);
             }
             coordinate.push_back(t);
@@ -64,23 +64,46 @@ bool Map::updateMap() {
 
     for (auto s : ship) {
         std::vector<position*> trace = s->getTrace();
-        int x = trace.back()->first;
-        int y = trace.back()->second;
-        if (x < 0 || y < 0 || x > max_x || y > max_y) {
-            trace.pop_back();
-            continue;
+        position* current_pos = nullptr;
+        while (true) {
+            current_pos = trace.back();
+            int x = current_pos->first;
+            int y = current_pos->second;
+            if (x < 0 || y < 0 || x > max_x || y > max_y) {
+                trace.pop_back();
+                continue;
+            }
+            break;
         }
-        if (s->undo) {
-            coordinate;
-            coordinate.at(max_x*y + x)->setState(BLACK_STATE);
-            trace.pop_back();
-            continue;
+        coordinate.at(max_x*current_pos->second + current_pos->first)->setState(RED_STATE);
+
+        for (auto position = trace.begin(); position != trace.end(); ++position) {
+            int x = (*position)->first;
+            int y = (*position)->second;
         }
 
-        if (coordinate.at(max_x*y + x)->getState() == BLACK_STATE) {
-            coordinate.at(max_x*y + x)->setState(RED_STATE);
-        } else if (coordinate.at(max_x*y + x)->getState() == RED_STATE) {
-            s->undo = true;
+        for (auto position : trace) {
+            int x = position->first;
+            int y = position->second;
+
+            if (x < 0 || y < 0 || x > max_x || y > max_y) {
+                trace.pop_back();
+                continue;
+            }
+            if (s->undo) {
+                coordinate;
+                coordinate.at(max_x*y + x)->setState(BLACK_STATE);
+                trace.pop_back();
+                continue;
+            }
+
+            if (coordinate.at(max_x*y + x)->getState() == BLACK_STATE) {
+                coordinate.at(max_x*y + x)->setState(BLUE_STATE);
+            } else if (coordinate.at(max_x*y + x)->getState() == BLUE_STATE) {
+                coordinate.at(max_x*y + x)->setState(BLUE_STATE);
+            }/* else if (coordinate.at(max_x*y + x)->getState() == BLUE_STATE) {
+                s->undo = true;
+            }*/
         }
     }
 

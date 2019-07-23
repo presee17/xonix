@@ -9,8 +9,8 @@
 
 using namespace sf;
 
-const int M = 40;
-const int N = 80;
+const int map_y = 40;
+const int map_x = 80;
 
 //int grid[M][N] = {0};
 //
@@ -25,12 +25,12 @@ const int N = 80;
 
 int main()
 {
-    Map map(N,M);
+    Map map(map_x, map_y);
     InputHandler handler;
-    Enemy* enemy1 = new Enemy(N,M);
-    Enemy* enemy2 = new Enemy(N, M);
-    Enemy* enemy3 = new Enemy(N, M);
-    Enemy* enemy4 = new Enemy(N, M);
+    Enemy* enemy1 = new Enemy(map_x, map_y);
+    Enemy* enemy2 = new Enemy(map_x, map_y);
+    Enemy* enemy3 = new Enemy(map_x, map_y);
+    Enemy* enemy4 = new Enemy(map_x, map_y);
     ZetShip* zet_ship = new ZetShip();
     map.enemy.push_back(enemy1);
     map.enemy.push_back(enemy2);
@@ -73,23 +73,22 @@ int main()
 			if (e.type == Event::KeyPressed)
              if (e.key.code==Keyboard::Escape)
                {
-                for (int i=1;i<M-1;i++)
-	             for (int j=1;j<N-1;j++)
+                for (int i=1;i< map_y -1;i++)
+	             for (int j=1;j< map_x -1;j++)
                    //grid[i][j]=0;
 
                 //x=10;y=0;
                 Game=true;
                }
 		}
-        handler.handleInput(zet_ship);
-        //dx = ship->getx();
-        //dy = ship->gety();
+
 		if (!Game) continue;
         
         if (timer > delay)
         {
-        //Game = map.updateMap();
-        timer = 0;
+            handler.handleInput(zet_ship);
+            Game = map.updateMap();
+            timer = 0;
 
   //          int x_flag = 1;
   //          if (dx < 0) x_flag = -1;

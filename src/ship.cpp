@@ -13,20 +13,28 @@ Ship::Ship() {
 
 void Ship::up() {
     position* prev_pos = trace.back();
-    trace.push_back(new position(prev_pos->first, prev_pos->second - v));
+    for (int i = 1; i <= v; ++i) {
+        trace.push_back(new position(prev_pos->first, prev_pos->second - i));
+    }
 }
 
 void Ship::down() {
     position* prev_pos = trace.back();
-    trace.push_back(new position(prev_pos->first, prev_pos->second + v));
+    for (int i = 1; i <= v; ++i) {
+        trace.push_back(new position(prev_pos->first, prev_pos->second + i));
+    }
 }
 void Ship::left() {
     position* prev_pos = trace.back();
-    trace.push_back(new position(prev_pos->first - v, prev_pos->second));
+    for (int i = 1; i <= v; ++i) {
+        trace.push_back(new position(prev_pos->first - i, prev_pos->second));
+    }
 }
 void Ship::right() {
     position* prev_pos = trace.back();
-    trace.push_back(new position(prev_pos->first + v, prev_pos->second));
+    for (int i = 1; i <= v; ++i) {
+        trace.push_back(new position(prev_pos->first + i, prev_pos->second));
+    }
 }
 
 ZetShip::ZetShip() {
