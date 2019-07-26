@@ -34,6 +34,8 @@ public:
 
     void drawMap(sf::RenderWindow* window);
 
+
+
     std::vector<Ship*> ship;
     std::vector<Enemy*> enemy;
 private:

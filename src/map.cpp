@@ -4,10 +4,11 @@
 #include "enemy.h"
 #include <SFML/Graphics.hpp>
 
+const int tile_size_ = 18;
 Map::Map(int max_x, int max_y) {
     sf::Texture* tile = new sf::Texture();
     tile->loadFromFile("E:/study/1/xonix/images/tiles.png");
-    Tile::tile_size = 18;
+    Tile::tile_size = tile_size_;
 
     Tile::blue_tile->setTexture(*tile);
     Tile::blue_tile->setTextureRect(sf::IntRect(0, 0, Tile::tile_size, Tile::tile_size));
@@ -37,7 +38,7 @@ Map::Map(int max_x, int max_y) {
         for (int j = 0; j < max_x; ++j) {
             Tile* t = new Tile(j, i);
             if (i == 0 || j == 0 || j == max_x - 1 || i == max_y - 1) {
-                t->setState(BLUE_STATE);
+                t->setState(GREEN_STATE);
             }
             coordinate.push_back(t);
         }
@@ -64,22 +65,60 @@ bool Map::updateMap() {
 
     for (auto s : ship) {
         std::vector<position*> trace = s->getTrace();
-        position* current_pos = nullptr;
-        while (true) {
-            current_pos = trace.back();
-            int x = current_pos->first;
-            int y = current_pos->second;
-            if (x < 0 || y < 0 || x > max_x || y > max_y) {
-                trace.pop_back();
-                continue;
-            }
-            break;
-        }
-        coordinate.at(max_x*current_pos->second + current_pos->first)->setState(RED_STATE);
 
-        for (auto position = trace.begin(); position != trace.end(); ++position) {
-            int x = (*position)->first;
-            int y = (*position)->second;
+        position* current_pos = s->getCurrentPos();
+        int x = current_pos->first;
+        int y = current_pos->second;
+        while (x < 0 || y < 0 || x > max_x || y > max_y) {
+            if (!s->undo()) return false;
+            current_pos = s->getCurrentPos();
+            x = current_pos->first;
+            y = current_pos->second;
+        }
+        if (s->undo_) {
+            if (s->undo()) {
+                getTile(x, y)->setState(BLACK_STATE);
+                return false;
+            } else {
+                s->undo_ = false;
+                return false;
+            }
+        }
+        for (auto position = trace.rbegin(); position != trace.rend(); ++position) {
+            int pointer_x = x, pointer_y = y;
+            Tile* tile = getTile(pointer_x, pointer_y);
+            STATE state = tile->getState();
+            switch (state) {
+                case BLACK_STATE:{
+                    getTile(x,y)->setState(BLUE_STATE);
+                    break;
+                }
+                case BLUE_STATE: {
+                    //ground!
+                    break;
+                }
+                case PURPLE_STATE: {
+                    break;
+                }
+                case RED_STATE: {
+                    break;
+                }
+                case GREEN_STATE: {
+                    //ground!
+                    break;
+                }
+                case YELLOW_STATE: {
+                    break;
+                }
+                case SKYBLUE_STATE: {
+                    break;
+                }
+                case ORANGE_STATE: {
+                    break;
+                }
+
+            }
+
         }
 
         for (auto position : trace) {
@@ -90,12 +129,12 @@ bool Map::updateMap() {
                 trace.pop_back();
                 continue;
             }
-            if (s->undo) {
-                coordinate;
-                coordinate.at(max_x*y + x)->setState(BLACK_STATE);
-                trace.pop_back();
-                continue;
-            }
+            //if (s->undo) {
+            //    coordinate;
+            //    coordinate.at(max_x*y + x)->setState(BLACK_STATE);
+            //    trace.pop_back();
+            //    continue;
+            //}
 
             if (coordinate.at(max_x*y + x)->getState() == BLACK_STATE) {
                 coordinate.at(max_x*y + x)->setState(BLUE_STATE);
@@ -134,5 +173,8 @@ void Map::drawMap(sf::RenderWindow* window) {
         if (t->sTile != NULL) {
             t->drawTile(window);
         }
+    }
+    for (auto s : ship) {
+        s->drawShip(window, tile_size_);
     }
 }
