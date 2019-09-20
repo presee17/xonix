@@ -9,8 +9,8 @@
 
 using namespace sf;
 
-const int map_y = 40;
-const int map_x = 80;
+const int map_y = 200;
+const int map_x = 400;
 
 //int grid[M][N] = {0};
 //
@@ -55,7 +55,7 @@ int main()
 
 	bool Game=true;
 	//int x=0, y=0, dx=0, dy=0;
-    float timer=0, delay=0.07; 
+    float timer=0, delay=0.04; 
     Clock clock;
 
     while (window.isOpen())

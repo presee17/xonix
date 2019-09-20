@@ -17,75 +17,69 @@ Ship::Ship() {
 }
 
 void Ship::up() {
-    position* prev_pos = trace.back();
-    for (int i = 1; i <= v; ++i) {
-        int x = prev_pos->first;
-        int y = prev_pos->second - i;
+    for (int i = 0; i < v; ++i) {
+        int x = current_pos->first;
+        int y = current_pos->second - 1;
         for (auto pos : trace) {
             if (pos->first == x && pos->second == y) {
                 undo_ = true;
             }
-            else {
-                trace.push_back(new position(x, y));
-            }
         }
+        current_pos = new position(x, y);
+        trace.push_back(current_pos);
     }
-    current_pos = trace.back();
 }
 
 void Ship::down() {
     position* prev_pos = trace.back();
-    for (int i = 1; i <= v; ++i) {
-        int x = prev_pos->first;
-        int y = prev_pos->second + i;
+    for (int i = 0; i < v; ++i) {
+        int x = current_pos->first;
+        int y = current_pos->second + 1;
         for (auto pos : trace) {
             if (pos->first == x && pos->second == y) {
                 undo_ = true;
-            } else {
-                trace.push_back(new position(x, y));
             }
         }
+        current_pos = new position(x, y);
+        trace.push_back(current_pos);
     }
-    current_pos = trace.back();
 }
+
 void Ship::left() {
-    position* prev_pos = trace.back();
-    for (int i = 1; i <= v; ++i) {
-        int x = prev_pos->first - i;
-        int y = prev_pos->second;
+    for (int i = 0; i < v; ++i) {
+        int x = current_pos->first - 1;
+        int y = current_pos->second;
         for (auto pos : trace) {
             if (pos->first == x && pos->second == y) {
                 undo_ = true;
-            } else {
-                trace.push_back(new position(x, y));
             }
         }
+        current_pos = new position(x, y);
+        trace.push_back(current_pos);
     }
 }
 void Ship::right() {
-    position* prev_pos = trace.back();
-    for (int i = 1; i <= v; ++i) {
-        int x = prev_pos->first + i;
-        int y = prev_pos->second;
+    for (int i = 0; i < v; ++i) {
+        int x = current_pos->first + 1;
+        int y = current_pos->second;
         for (auto pos : trace) {
             if (pos->first == x && pos->second == y) {
                 undo_ = true;
-            }
-            else {
-                trace.push_back(new position(x, y));
+                return;
             }
         }
+        current_pos = new position(x, y);
+        trace.push_back(current_pos);
     }
-    current_pos = trace.back();
 }
 
 
 ZetShip::ZetShip() {
-    v = 2;
+    v = 8;
 }
 
 BattleShip::BattleShip() {
-    v = 1;
+    v = 4;
 }
 
 void Ship::drawShip(sf::RenderWindow* window, int tile_size) {

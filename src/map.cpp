@@ -4,7 +4,7 @@
 #include "enemy.h"
 #include <SFML/Graphics.hpp>
 
-const int tile_size_ = 18;
+const int tile_size_ = 3;
 Map::Map(int max_x, int max_y) {
     sf::Texture* tile = new sf::Texture();
     tile->loadFromFile("E:/study/1/xonix/images/tiles.png");
@@ -70,7 +70,7 @@ bool Map::updateMap() {
         int x = current_pos->first;
         int y = current_pos->second;
         while (x < 0 || y < 0 || x > max_x || y > max_y) {
-            if (!s->undo()) return false;
+            if (!s->undo()) return true;
             current_pos = s->getCurrentPos();
             x = current_pos->first;
             y = current_pos->second;
@@ -78,13 +78,14 @@ bool Map::updateMap() {
         if (s->undo_) {
             if (s->undo()) {
                 getTile(x, y)->setState(BLACK_STATE);
-                return false;
+                return true;
             } else {
                 s->undo_ = false;
-                return false;
+                return true;
             }
         }
         for (auto position = trace.rbegin(); position != trace.rend(); ++position) {
+            current_pos = s->getCurrentPos();
             int pointer_x = x, pointer_y = y;
             Tile* tile = getTile(pointer_x, pointer_y);
             STATE state = tile->getState();
@@ -95,6 +96,15 @@ bool Map::updateMap() {
                 }
                 case BLUE_STATE: {
                     //ground!
+                    for (auto begin : trace) {
+
+                    }
+                    if (trace.size() > 1) {
+                        current_pos = trace.back();
+                        trace.clear();
+                        trace.push_back(current_pos);
+                        return true;
+                    }
                     break;
                 }
                 case PURPLE_STATE: {
@@ -105,6 +115,15 @@ bool Map::updateMap() {
                 }
                 case GREEN_STATE: {
                     //ground!
+                    for (auto begin : trace) {
+                    
+                    }
+                    if (trace.size() > 1) {
+                        current_pos = trace.back();
+                        trace.clear();
+                        trace.push_back(current_pos);
+                        return true;
+                    }
                     break;
                 }
                 case YELLOW_STATE: {
@@ -121,29 +140,6 @@ bool Map::updateMap() {
 
         }
 
-        for (auto position : trace) {
-            int x = position->first;
-            int y = position->second;
-
-            if (x < 0 || y < 0 || x > max_x || y > max_y) {
-                trace.pop_back();
-                continue;
-            }
-            //if (s->undo) {
-            //    coordinate;
-            //    coordinate.at(max_x*y + x)->setState(BLACK_STATE);
-            //    trace.pop_back();
-            //    continue;
-            //}
-
-            if (coordinate.at(max_x*y + x)->getState() == BLACK_STATE) {
-                coordinate.at(max_x*y + x)->setState(BLUE_STATE);
-            } else if (coordinate.at(max_x*y + x)->getState() == BLUE_STATE) {
-                coordinate.at(max_x*y + x)->setState(BLUE_STATE);
-            }/* else if (coordinate.at(max_x*y + x)->getState() == BLUE_STATE) {
-                s->undo = true;
-            }*/
-        }
     }
 
     //for (auto e : enemy) {

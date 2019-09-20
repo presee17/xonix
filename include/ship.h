@@ -2,8 +2,18 @@
 #define _Ship_
 
 #include <vector>
+#include <list>
 
 typedef std::pair<int,int> position;
+
+enum DIRECTION {
+    DIRECTION_LEFT,
+    DIRECTION_RIGHT,
+    DIRECTION_UP,
+    DIRECTION_DOWN,
+    DIRECTION_NONE
+};
+
 
 namespace sf {
     class Sprite;
@@ -20,14 +30,13 @@ public:
     virtual void down();
     virtual void left();
     virtual void right();
-    std::vector<position*> getTrace() {
+    std::list<position*> getTrace() {
         return trace;
     }
 
     bool undo() {
-        if (trace.size() > 1) {
+        if (!trace.empty()) {
             trace.pop_back();
-            current_pos = trace.back();
             return true;
         } else {
             return false;
@@ -37,20 +46,15 @@ public:
     position* getCurrentPos() {
         return current_pos;
     }
-    position* setCurrentPos() {
-        if (!trace.empty()) {
-            return trace.back();
-        } else {
-            return nullptr;
-        }
-    }
     bool undo_;
     void Ship::drawShip(sf::RenderWindow* window, int tile_size);
 protected:
     int v;
-    std::vector<position*> trace;
+    std::list<position*> trace;
     position* current_pos;
-    sf::Sprite* ship_;
+
+    DIRECTION direction;
+    int velocity;
 };
 
 class ZetShip : public Ship {
